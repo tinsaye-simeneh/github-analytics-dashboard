@@ -37,7 +37,7 @@ export default function DashboardLayout({
         <Sidebar />
       </div>
 
-      <main className=" w-full p-4">{children}</main>
+      <main className="w-full mt-10 md:mt-0">{children}</main>
     </div>
   );
 }

@@ -19,7 +19,7 @@ import {
   Legend,
 } from "chart.js";
 
-// Registering Chart.js components
+// Register chart components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -34,6 +34,9 @@ export default function Repositories() {
   const [loading, setLoading] = useState(false);
   const { searchedUsername, repos, fetchRepos } = useGitHubStore();
   const router = useRouter();
+  const [languageData, setLanguageData] = useState<{ [key: string]: number }>(
+    {}
+  );
 
   useEffect(() => {
     if (!searchedUsername || repos.length > 0) return;
@@ -53,6 +56,21 @@ export default function Repositories() {
     loadRepos();
   }, [searchedUsername, page, fetchRepos, repos.length]);
 
+  useEffect(() => {
+    if (repos.length > 0) {
+      const languageCount: { [key: string]: number } = {};
+
+      repos.forEach((repo: GitHubRepo) => {
+        if (repo.language) {
+          languageCount[repo.language] =
+            (languageCount[repo.language] || 0) + 1;
+        }
+      });
+
+      setLanguageData(languageCount);
+    }
+  }, [repos]);
+
   const columns = [
     { key: "name", header: "Name" },
     { key: "description", header: "Description" },
@@ -63,13 +81,6 @@ export default function Repositories() {
       header: "Last Updated",
       render: (item: GitHubRepo) =>
         new Date(item.updated_at).toLocaleDateString(),
-    },
-    {
-      key: "languages",
-      header: "Programming Languages",
-      render: (item: GitHubRepo) => (
-        <LanguageChart languagesUrl={item.languages_url} />
-      ),
     },
   ];
 
@@ -116,11 +127,30 @@ export default function Repositories() {
     );
   }
 
+  const chartData = {
+    labels: Object.keys(languageData),
+    datasets: [
+      {
+        label: "Repositories per Language",
+        data: Object.values(languageData),
+        backgroundColor: "#F2AB4E",
+        borderColor: "#354148",
+        borderWidth: 1,
+      },
+    ],
+  };
+
   return (
     <div className="pr-5 pl-10 mt-20">
       <Title order={2} mb="sm">
         Repositories
       </Title>
+
+      <div className="mb-8">
+        <Title order={3}>Programming Languages Used</Title>
+        <Bar data={chartData} />
+      </div>
+
       <EntityTable data={repos} columns={columns} />
       <Button
         onClick={handleLoadMore}
@@ -134,37 +164,3 @@ export default function Repositories() {
     </div>
   );
 }
-
-const LanguageChart = ({ languagesUrl }: { languagesUrl: string }) => {
-  //eslint-disable-next-line
-  const [languagesData, setLanguagesData] = useState<any>(null);
-
-  useEffect(() => {
-    const fetchLanguages = async () => {
-      try {
-        const response = await fetch(languagesUrl);
-        const data = await response.json();
-        const labels = Object.keys(data);
-        const datasets = [
-          {
-            label: "Languages",
-            data: Object.values(data),
-            backgroundColor: "rgba(75, 192, 192, 0.6)",
-          },
-        ];
-
-        setLanguagesData({
-          labels,
-          datasets,
-        });
-      } catch (error) {
-        console.error("Error fetching languages:", error);
-      }
-    };
-    fetchLanguages();
-  }, [languagesUrl]);
-
-  if (!languagesData) return <SkeletonLoading />;
-
-  return <Bar data={languagesData} options={{ responsive: true }} />;
-};
