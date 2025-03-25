@@ -21,15 +21,18 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
 
   return (
     <Box
+      component="nav"
+      h={60}
+      px="md"
+      bg="gray.1"
       style={{
-        borderBottom: "1px solid #E0E0E0",
+        borderBottom: "1px solid",
+        borderColor: "gray.2",
         position: "fixed",
         top: 0,
         left: 0,
         right: 0,
         zIndex: 1000,
-        backgroundColor: "white",
-        padding: "10px 20px",
       }}
     >
       <Group justify="space-between" align="center" style={{ height: "100%" }}>
@@ -46,8 +49,7 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
               <Button
                 color="blue"
                 variant="outline"
-                component="a"
-                href="/dashboard"
+                onClick={() => router.push("/dashboard")}
               >
                 Dashboard
               </Button>
@@ -56,12 +58,15 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
               </Button>
             </Group>
           ) : (
-            <Button color="blue" variant="outline" component="a" href="/login">
+            <Button
+              color="blue"
+              variant="outline"
+              onClick={() => router.push("/auth/login")}
+            >
               Login
             </Button>
           )}
 
-          {/* 🔹 Toggle Theme Button */}
           <ActionIcon
             onClick={toggleTheme}
             variant="outline"

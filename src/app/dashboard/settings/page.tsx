@@ -16,7 +16,7 @@ export default function Settings() {
       <Title order={2} mb="lg">
         Settings
       </Title>
-      <Stack spacing="md">
+      <Stack gap="md">
         <Text>Current Searched User: {searchedUsername || "None"}</Text>
         <Button
           onClick={handleClearData}
