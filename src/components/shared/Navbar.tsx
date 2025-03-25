@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { Box, Group, ActionIcon, Button, Drawer, Text } from "@mantine/core";
-import { IconSun, IconMoon } from "@tabler/icons-react";
+import { Box, Group, ActionIcon, Button, Menu, Text } from "@mantine/core";
+import { IconSun, IconMoon, IconMenu2, IconUser } from "@tabler/icons-react";
 import { useAuthStore } from "@/store/authstore";
 import { useRouter } from "next/navigation";
-import { IconUser } from "@tabler/icons-react";
 
 interface NavbarProps {
   toggleTheme: () => void;
@@ -15,9 +13,8 @@ interface NavbarProps {
 const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
   const router = useRouter();
   const { isAuthenticated, username, logout } = useAuthStore();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const menu = isAuthenticated
+  const menuItems = isAuthenticated
     ? [
         { label: "Dashboard", path: "/dashboard" },
         { label: "Logout", path: "/auth/login", action: logout },
@@ -27,7 +24,6 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
   const handleMenuClick = (path: string, action?: () => void) => {
     if (action) action();
     router.push(path);
-    setMobileMenuOpen(false);
   };
 
   return (
@@ -51,6 +47,7 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
           GitHub Analytics
         </Text>
 
+        {/* Desktop Menu - visible from small screens up */}
         <Group visibleFrom="sm">
           {isAuthenticated && (
             <Group align="center">
@@ -59,7 +56,7 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
             </Group>
           )}
 
-          {menu.map((item) => (
+          {menuItems.map((item) => (
             <Button
               key={item.label}
               color={item.label === "Logout" ? "red" : "blue"}
@@ -83,36 +80,53 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
             )}
           </ActionIcon>
         </Group>
-      </Group>
 
-      <Drawer
-        opened={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
-        title="Menu"
-        padding="md"
-        size="xs"
-      >
-        {isAuthenticated && (
-          <Group dir="column" align="center">
-            <IconUser size={18} />
-            <Text size="sm">{username}</Text>
-          </Group>
-        )}
+        <Menu shadow="md" width={200} position="bottom" withArrow>
+          <Menu.Target>
+            <ActionIcon variant="outline" size="lg">
+              <IconMenu2 size={18} />
+            </ActionIcon>
+          </Menu.Target>
 
-        <Group dir="column" gap="md">
-          {menu.map((item) => (
-            <Button
-              key={item.label}
-              color={item.label === "Logout" ? "red" : "blue"}
-              variant="outline"
-              fullWidth
-              onClick={() => handleMenuClick(item.path, item.action)}
+          <Menu.Dropdown>
+            {isAuthenticated && (
+              <>
+                <Menu.Label>
+                  <Group align="center">
+                    <IconUser size={18} />
+                    <Text size="sm">{username}</Text>
+                  </Group>
+                </Menu.Label>
+                <Menu.Divider />
+              </>
+            )}
+
+            {menuItems.map((item) => (
+              <Menu.Item
+                key={item.label}
+                color={item.label === "Logout" ? "red" : "blue"}
+                onClick={() => handleMenuClick(item.path, item.action)}
+              >
+                {item.label}
+              </Menu.Item>
+            ))}
+
+            <Menu.Divider />
+            <Menu.Item
+              onClick={toggleTheme}
+              leftSection={
+                colorScheme === "light" ? (
+                  <IconMoon size={18} />
+                ) : (
+                  <IconSun size={18} />
+                )
+              }
             >
-              {item.label}
-            </Button>
-          ))}
-        </Group>
-      </Drawer>
+              Toggle Theme
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      </Group>
     </Box>
   );
 };
