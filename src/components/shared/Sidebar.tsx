@@ -7,8 +7,8 @@ import { IconMenu2, IconX } from "@tabler/icons-react";
 import { useMediaQuery } from "@mantine/hooks";
 
 export default function Sidebar() {
-  const isMobile = useMediaQuery("(max-width: 1024px)"); // Detect mobile screens
-  const [isOpen, setIsOpen] = useState(!isMobile); // Default open on PC, collapsible on mobile
+  const isMobile = useMediaQuery("(max-width: 1024px)");
+  const [isOpen, setIsOpen] = useState(!isMobile);
   const pathname = usePathname();
 
   const tabs = [
@@ -18,6 +18,10 @@ export default function Sidebar() {
     { name: "Activity", path: "/dashboard/activity" },
     { name: "Settings", path: "/dashboard/settings" },
   ];
+
+  const handleRouteChange = () => {
+    if (isMobile) setIsOpen(false);
+  };
 
   return (
     <>
@@ -69,6 +73,7 @@ export default function Sidebar() {
                 component={Link}
                 href={tab.path}
                 active={isActive}
+                onClick={handleRouteChange}
                 style={{
                   backgroundColor: isActive ? "#E0E0E0" : "transparent",
                   color: isActive ? "black" : "gray",
