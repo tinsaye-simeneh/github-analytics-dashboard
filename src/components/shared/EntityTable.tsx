@@ -22,14 +22,14 @@ interface EntityTableProps<T> {
   data: T[];
   columns: Column<T>[];
   emptyMessage?: string;
-  layout?: "compact" | "comfortable"; // Added layout prop
+  layout?: "compact" | "comfortable"; // Already accepts layout
 }
 
 export default function EntityTable<T>({
   data,
   columns,
   emptyMessage = "No data available",
-  layout = "comfortable", // Default to comfortable
+  layout = "comfortable",
 }: EntityTableProps<T>) {
   const [filters, setFilters] = useState<{ [key: string]: string }>({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,12 +56,10 @@ export default function EntityTable<T>({
     currentPage * pageSize
   );
 
-  // Adjust spacing based on layout
   const spacing = layout === "compact" ? "xs" : "md";
 
   return (
     <Box>
-      {/* Filters */}
       <Group grow mb={spacing}>
         {columns.map(
           (column) =>

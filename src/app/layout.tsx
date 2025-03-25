@@ -6,6 +6,7 @@ import { useEffect, useState, Suspense } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/components/shared/Navbar";
 import { useAuthStore } from "@/store/authstore";
+import { useGitHubStore } from "@/store/githubStore";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,35 +20,24 @@ export default function RootLayout({
   const pathname = usePathname();
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
+  const { layout } = useGitHubStore();
   const [progress, setProgress] = useState(0);
   const [isPageLoading, setIsPageLoading] = useState(false);
   const [colorScheme, setColorScheme] = useState<"light" | "dark">("light");
-  const [layout, setLayout] = useState<"compact" | "comfortable">(
-    "comfortable"
-  );
 
-  // Load saved preferences on mount
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") as
       | "light"
       | "dark"
       | null;
-    const storedLayout = localStorage.getItem("layout") as
-      | "compact"
-      | "comfortable"
-      | null;
     if (storedTheme) setColorScheme(storedTheme);
-    if (storedLayout) setLayout(storedLayout);
   }, []);
 
-  // Save preferences to localStorage and apply theme
   useEffect(() => {
     localStorage.setItem("theme", colorScheme);
-    localStorage.setItem("layout", layout);
     document.documentElement.setAttribute("data-theme", colorScheme);
-  }, [colorScheme, layout]);
+  }, [colorScheme]);
 
-  // Page loading effect
   useEffect(() => {
     const handleStart = () => {
       setIsPageLoading(true);
@@ -67,7 +57,6 @@ export default function RootLayout({
     return () => clearTimeout(timeout);
   }, [pathname]);
 
-  // Redirect unauthenticated users to login
   useEffect(() => {
     if (!isAuthenticated && pathname !== "/auth/login") {
       router.push("/auth/login");
@@ -76,10 +65,6 @@ export default function RootLayout({
 
   const toggleTheme = () => {
     setColorScheme((prev) => (prev === "light" ? "dark" : "light"));
-  };
-
-  const toggleLayout = () => {
-    setLayout((prev) => (prev === "compact" ? "comfortable" : "compact"));
   };
 
   return (
