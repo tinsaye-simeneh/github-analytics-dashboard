@@ -4,7 +4,7 @@ import "@mantine/core/styles.css";
 import { MantineProvider, Progress } from "@mantine/core";
 import { useEffect, useState, Suspense } from "react";
 import { usePathname } from "next/navigation";
-import Navbar from "../components/Navbar";
+import Navbar from "@/components/shared/Navbar";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -79,7 +79,7 @@ export default function RootLayout({
             />
           )}
           <ToastContainer position="top-right" autoClose={3000} />
-          <Navbar toggleTheme={toggleTheme} />
+          <Navbar toggleTheme={toggleTheme} colorScheme={colorScheme} />
           <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
         </MantineProvider>
       </body>
