@@ -53,10 +53,11 @@ const AuthForm: React.FC = () => {
         px="lg"
         py="xl"
         withBorder
-        className="max-w-sm w-full relative"
+        bg="white"
+        className="max-w-sm w-full relative border-2 border-gray-300"
       >
         <LoadingOverlay visible={loading} />
-        <Title order={2} className="text-center text-sky-500" mb="20">
+        <Title order={2} className="text-center text-sky-500 mb-4">
           Login
         </Title>
 
