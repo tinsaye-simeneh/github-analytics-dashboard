@@ -7,10 +7,10 @@ import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/components/shared/Navbar";
 import { useAuthStore } from "@/store/authstore";
 import { useGitHubStore } from "@/store/githubStore";
-import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React from "react";
+import "./globals.css";
 
 export default function RootLayout({
   children,
@@ -20,22 +20,25 @@ export default function RootLayout({
   const pathname = usePathname();
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
-  const { layout } = useGitHubStore();
+  const { layout, colorScheme, setColorScheme } = useGitHubStore();
   const [progress, setProgress] = useState(0);
   const [isPageLoading, setIsPageLoading] = useState(false);
-  const [colorScheme, setColorScheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") as
       | "light"
       | "dark"
       | null;
-    if (storedTheme) setColorScheme(storedTheme);
-  }, []);
+    if (storedTheme && !colorScheme) {
+      setColorScheme(storedTheme);
+    }
+  }, [colorScheme, setColorScheme]);
 
   useEffect(() => {
-    localStorage.setItem("theme", colorScheme);
-    document.documentElement.setAttribute("data-theme", colorScheme);
+    if (colorScheme) {
+      localStorage.setItem("theme", colorScheme);
+      document.documentElement.setAttribute("data-theme", colorScheme);
+    }
   }, [colorScheme]);
 
   useEffect(() => {
@@ -64,7 +67,8 @@ export default function RootLayout({
   }, [isAuthenticated, pathname, router]);
 
   const toggleTheme = () => {
-    setColorScheme((prev) => (prev === "light" ? "dark" : "light"));
+    const newColorScheme = colorScheme === "light" ? "dark" : "light";
+    setColorScheme(newColorScheme);
   };
 
   return (
@@ -88,8 +92,11 @@ export default function RootLayout({
               }}
             />
           )}
+
           <ToastContainer position="top-right" autoClose={3000} />
+
           <Navbar toggleTheme={toggleTheme} colorScheme={colorScheme} />
+
           <Suspense fallback={<div>Loading...</div>}>
             {React.Children.map(children, (child) =>
               React.isValidElement(child)

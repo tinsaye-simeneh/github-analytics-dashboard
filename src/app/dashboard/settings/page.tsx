@@ -11,17 +11,18 @@ import {
   Container,
   Divider,
 } from "@mantine/core";
-import ThemeToggler from "@/components/shared/ThemeToggler";
 import { useGitHubStore } from "@/store/githubStore";
 import { toast } from "react-toastify";
 
-interface SettingsProps {
-  toggleTheme: () => void;
-  colorScheme: "light" | "dark";
-}
-
-export default function Settings({ toggleTheme, colorScheme }: SettingsProps) {
-  const { searchedUsername, clearData, layout, setLayout } = useGitHubStore();
+export default function Settings() {
+  const {
+    searchedUsername,
+    clearData,
+    layout,
+    setLayout,
+    colorScheme,
+    setColorScheme,
+  } = useGitHubStore();
 
   const handleLayoutChange = (value: string | null) => {
     if (value === "compact" || value === "comfortable") {
@@ -34,6 +35,10 @@ export default function Settings({ toggleTheme, colorScheme }: SettingsProps) {
   const handleClearData = () => {
     clearData();
     toast.success("GitHub data cleared");
+  };
+
+  const handleThemeToggle = () => {
+    setColorScheme(colorScheme === "light" ? "dark" : "light");
   };
 
   return (
@@ -69,7 +74,10 @@ export default function Settings({ toggleTheme, colorScheme }: SettingsProps) {
             <Text size="md" w={500}>
               Theme: {colorScheme === "light" ? "Light" : "Dark"}
             </Text>
-            <ThemeToggler toggleTheme={toggleTheme} colorScheme={colorScheme} />
+            {/* Directly use the handleThemeToggle */}
+            <Button onClick={handleThemeToggle} variant="outline">
+              Toggle Theme
+            </Button>
           </Group>
 
           <Divider my="md" />
