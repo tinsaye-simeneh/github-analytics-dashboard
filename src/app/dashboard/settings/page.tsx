@@ -13,6 +13,7 @@ import {
 } from "@mantine/core";
 import { useGitHubStore } from "@/store/githubStore";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function Settings() {
   const {
@@ -23,6 +24,7 @@ export default function Settings() {
     colorScheme,
     setColorScheme,
   } = useGitHubStore();
+  const router = useRouter();
 
   const handleLayoutChange = (value: string | null) => {
     if (value === "compact" || value === "comfortable") {
@@ -35,6 +37,7 @@ export default function Settings() {
   const handleClearData = () => {
     clearData();
     toast.success("GitHub data cleared");
+    router.push("/dashboard/home");
   };
 
   const handleThemeToggle = () => {
@@ -74,7 +77,6 @@ export default function Settings() {
             <Text size="md" w={500}>
               Theme: {colorScheme === "light" ? "Light" : "Dark"}
             </Text>
-            {/* Directly use the handleThemeToggle */}
             <Button onClick={handleThemeToggle} variant="outline">
               Toggle Theme
             </Button>

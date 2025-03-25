@@ -22,7 +22,7 @@ const AuthForm: React.FC = () => {
   const searchParams = useSearchParams();
   const { login, isAuthenticated } = useAuthStore();
 
-  const backTo = searchParams.get("backTo") || "/dashboard/home"; // Get backTo URL
+  const backTo = searchParams.get("backTo") || "/dashboard/home";
 
   const { register, handleSubmit } = useForm<FieldValues>();
 
@@ -40,7 +40,7 @@ const AuthForm: React.FC = () => {
       if (data.email === "admin" && data.password === "admin123") {
         login(data.email);
         toast.success("Login successful!");
-        router.push(backTo); // Redirect back to original page
+        router.push(backTo);
       } else {
         setError("Invalid username or password");
         toast.error("Invalid credentials");
