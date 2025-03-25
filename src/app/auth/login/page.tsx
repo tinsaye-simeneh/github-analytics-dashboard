@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Button,
@@ -19,9 +19,15 @@ const AuthForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
-  const { login } = useAuthStore();
+  const { login, isAuthenticated } = useAuthStore();
 
   const { register, handleSubmit } = useForm<FieldValues>();
+
+  const isLoggedIn = useMemo(() => isAuthenticated, [isAuthenticated]);
+
+  useEffect(() => {
+    if (isLoggedIn) router.push("/dashboard/home");
+  }, [isLoggedIn, router]);
 
   const handleAuthSubmit: SubmitHandler<FieldValues> = async (data) => {
     setLoading(true);
@@ -31,7 +37,7 @@ const AuthForm: React.FC = () => {
       if (data.email === "admin" && data.password === "admin123") {
         login(data.email);
         toast.success("Login successful!");
-        router.push("/dashboard");
+        router.push("/dashboard/home");
       } else {
         setError("Invalid username or password");
         toast.error("Invalid credentials");

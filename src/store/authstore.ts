@@ -10,11 +10,21 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       isAuthenticated: false,
       username: null,
-      login: (username) => set({ isAuthenticated: true, username }),
-      logout: () => set({ isAuthenticated: false, username: null }),
+
+      login: (username) => {
+        if (!get().isAuthenticated) {
+          set({ isAuthenticated: true, username });
+        }
+      },
+
+      logout: () => {
+        if (get().isAuthenticated) {
+          set({ isAuthenticated: false, username: null });
+        }
+      },
     }),
     { name: "auth-storage" }
   )
