@@ -1,7 +1,7 @@
 "use client";
 
 import "@mantine/core/styles.css";
-import { MantineProvider, Progress } from "@mantine/core";
+import { MantineProvider, Progress, Center, Loader } from "@mantine/core";
 import { useEffect, useState, Suspense } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/components/shared/Navbar";
@@ -23,6 +23,7 @@ export default function RootLayout({
   const { layout, colorScheme, setColorScheme } = useGitHubStore();
   const [progress, setProgress] = useState(0);
   const [isPageLoading, setIsPageLoading] = useState(false);
+  const [loadingAuth, setLoadingAuth] = useState(true);
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") as
@@ -61,10 +62,21 @@ export default function RootLayout({
   }, [pathname]);
 
   useEffect(() => {
-    if (!isAuthenticated && pathname !== "/auth/login") {
-      router.push("/auth/login");
-    }
-  }, [isAuthenticated, pathname, router]);
+    const timeoutId = setTimeout(() => {
+      if (isAuthenticated === undefined) {
+        setLoadingAuth(true);
+        return;
+      }
+
+      if (!isAuthenticated) {
+        router.push("/auth/login");
+      } else {
+        setLoadingAuth(false);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [isAuthenticated, router, pathname]);
 
   const toggleTheme = () => {
     const newColorScheme = colorScheme === "light" ? "dark" : "light";
@@ -97,6 +109,11 @@ export default function RootLayout({
 
           <Navbar toggleTheme={toggleTheme} colorScheme={colorScheme} />
 
+          {loadingAuth && (
+            <Center style={{ height: "100vh" }}>
+              <Loader size="lg" />
+            </Center>
+          )}
           <Suspense fallback={<div>Loading...</div>}>
             {React.Children.map(children, (child) =>
               React.isValidElement(child)

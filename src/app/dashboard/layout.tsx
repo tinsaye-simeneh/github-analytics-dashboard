@@ -14,22 +14,32 @@ export default function DashboardLayout({
   const { isAuthenticated } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
-  const [loading, setLoading] = useState(true);
+  const [loadingAuth, setLoadingAuth] = useState(true);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push(`/auth/login?backTo=${encodeURIComponent(pathname)}`);
-    } else {
-      setLoading(false);
-    }
+    const timeoutId = setTimeout(() => {
+      if (isAuthenticated === undefined) {
+        setLoadingAuth(true);
+        return;
+      }
+
+      if (!isAuthenticated) {
+        router.push(`/auth/login?backTo=${encodeURIComponent(pathname)}`);
+      } else {
+        setLoadingAuth(false);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
   }, [isAuthenticated, router, pathname]);
 
-  if (loading)
+  if (loadingAuth) {
     return (
       <Center style={{ height: "100vh" }}>
         <Loader size="lg" />
       </Center>
     );
+  }
 
   return (
     <div className="flex w-full">
