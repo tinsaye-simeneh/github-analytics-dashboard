@@ -47,8 +47,7 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
           GitHub Analytics
         </Text>
 
-        {/* Desktop Menu - visible from small screens up */}
-        <Group visibleFrom="sm">
+        <Group visibleFrom="md">
           {isAuthenticated && (
             <Group align="center">
               <IconUser size={18} />
@@ -81,51 +80,53 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
           </ActionIcon>
         </Group>
 
-        <Menu shadow="md" width={200} position="bottom" withArrow>
-          <Menu.Target>
-            <ActionIcon variant="outline" size="lg">
-              <IconMenu2 size={18} />
-            </ActionIcon>
-          </Menu.Target>
+        <Box hiddenFrom="md">
+          <Menu shadow="md" width={150} position="bottom" withArrow>
+            <Menu.Target>
+              <ActionIcon variant="outline" size="lg">
+                <IconMenu2 size={18} />
+              </ActionIcon>
+            </Menu.Target>
 
-          <Menu.Dropdown>
-            {isAuthenticated && (
-              <>
-                <Menu.Label>
-                  <Group align="center">
-                    <IconUser size={18} />
-                    <Text size="sm">{username}</Text>
-                  </Group>
-                </Menu.Label>
-                <Menu.Divider />
-              </>
-            )}
+            <Menu.Dropdown>
+              {isAuthenticated && (
+                <>
+                  <Menu.Label>
+                    <Group align="center">
+                      <IconUser size={18} />
+                      <Text size="sm">{username}</Text>
+                    </Group>
+                  </Menu.Label>
+                  <Menu.Divider />
+                </>
+              )}
 
-            {menuItems.map((item) => (
+              {menuItems.map((item) => (
+                <Menu.Item
+                  key={item.label}
+                  color={item.label === "Logout" ? "red" : "blue"}
+                  onClick={() => handleMenuClick(item.path, item.action)}
+                >
+                  {item.label}
+                </Menu.Item>
+              ))}
+
+              <Menu.Divider />
               <Menu.Item
-                key={item.label}
-                color={item.label === "Logout" ? "red" : "blue"}
-                onClick={() => handleMenuClick(item.path, item.action)}
+                onClick={toggleTheme}
+                leftSection={
+                  colorScheme === "light" ? (
+                    <IconMoon size={18} />
+                  ) : (
+                    <IconSun size={18} />
+                  )
+                }
               >
-                {item.label}
+                Theme
               </Menu.Item>
-            ))}
-
-            <Menu.Divider />
-            <Menu.Item
-              onClick={toggleTheme}
-              leftSection={
-                colorScheme === "light" ? (
-                  <IconMoon size={18} />
-                ) : (
-                  <IconSun size={18} />
-                )
-              }
-            >
-              Toggle Theme
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+            </Menu.Dropdown>
+          </Menu>
+        </Box>
       </Group>
     </Box>
   );

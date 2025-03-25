@@ -12,7 +12,7 @@ export default function Sidebar() {
   const tabs = [
     { name: "Home", path: "/dashboard" },
     { name: "Overview", path: "/dashboard/overview" },
-    { name: "Repositories", path: "/dashboard/repo" },
+    { name: "Repositories", path: "/dashboard/repos" },
     { name: "Activity", path: "/dashboard/activity" },
     { name: "Settings", path: "/dashboard/settings" },
   ];
@@ -25,8 +25,8 @@ export default function Sidebar() {
         size="sm"
         style={{
           position: "fixed",
-          top: 60,
-          left: isOpen ? 260 : 20,
+          top: 70,
+          left: isOpen ? 180 : 20,
           zIndex: 1000,
           transition: "left 0.3s ease",
         }}
@@ -55,6 +55,7 @@ export default function Sidebar() {
             <Text size="xl" fw={700} mb="md">
               Dashboard
             </Text>
+
             {tabs.map((tab) => {
               const isActive =
                 pathname === tab.path || pathname.startsWith(`${tab.path}/`);
