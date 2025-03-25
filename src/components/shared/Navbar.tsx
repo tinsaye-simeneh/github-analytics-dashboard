@@ -1,9 +1,11 @@
 "use client";
 
-import { Box, Text, Group, ActionIcon, Button } from "@mantine/core";
+import { useState } from "react";
+import { Box, Group, ActionIcon, Button, Drawer, Text } from "@mantine/core";
 import { IconSun, IconMoon } from "@tabler/icons-react";
 import { useAuthStore } from "@/store/authstore";
 import { useRouter } from "next/navigation";
+import { IconUser } from "@tabler/icons-react";
 
 interface NavbarProps {
   toggleTheme: () => void;
@@ -13,10 +15,19 @@ interface NavbarProps {
 const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
   const router = useRouter();
   const { isAuthenticated, username, logout } = useAuthStore();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    router.push("/auth/login");
+  const menu = isAuthenticated
+    ? [
+        { label: "Dashboard", path: "/dashboard" },
+        { label: "Logout", path: "/auth/login", action: logout },
+      ]
+    : [{ label: "Login", path: "/auth/login" }];
+
+  const handleMenuClick = (path: string, action?: () => void) => {
+    if (action) action();
+    router.push(path);
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -40,32 +51,24 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
           GitHub Analytics
         </Text>
 
-        <Group>
-          {isAuthenticated ? (
+        <Group visibleFrom="sm">
+          {isAuthenticated && (
             <Group align="center">
-              <Text size="sm" mr="sm">
-                Welcome, {username}
-              </Text>
-              <Button
-                color="blue"
-                variant="outline"
-                onClick={() => router.push("/dashboard")}
-              >
-                Dashboard
-              </Button>
-              <Button color="red" variant="outline" onClick={handleLogout}>
-                Logout
-              </Button>
+              <IconUser size={18} />
+              <Text size="sm">{username}</Text>
             </Group>
-          ) : (
-            <Button
-              color="blue"
-              variant="outline"
-              onClick={() => router.push("/auth/login")}
-            >
-              Login
-            </Button>
           )}
+
+          {menu.map((item) => (
+            <Button
+              key={item.label}
+              color={item.label === "Logout" ? "red" : "blue"}
+              variant="outline"
+              onClick={() => handleMenuClick(item.path, item.action)}
+            >
+              {item.label}
+            </Button>
+          ))}
 
           <ActionIcon
             onClick={toggleTheme}
@@ -81,6 +84,35 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
           </ActionIcon>
         </Group>
       </Group>
+
+      <Drawer
+        opened={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        title="Menu"
+        padding="md"
+        size="xs"
+      >
+        {isAuthenticated && (
+          <Group dir="column" align="center">
+            <IconUser size={18} />
+            <Text size="sm">{username}</Text>
+          </Group>
+        )}
+
+        <Group dir="column" gap="md">
+          {menu.map((item) => (
+            <Button
+              key={item.label}
+              color={item.label === "Logout" ? "red" : "blue"}
+              variant="outline"
+              fullWidth
+              onClick={() => handleMenuClick(item.path, item.action)}
+            >
+              {item.label}
+            </Button>
+          ))}
+        </Group>
+      </Drawer>
     </Box>
   );
 };
