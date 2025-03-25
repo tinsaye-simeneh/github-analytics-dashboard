@@ -10,7 +10,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   const tabs = [
-    { name: "Home", path: "/dashboard" },
+    { name: "Home", path: "/dashboard/home" },
     { name: "Overview", path: "/dashboard/overview" },
     { name: "Repositories", path: "/dashboard/repos" },
     { name: "Activity", path: "/dashboard/activity" },

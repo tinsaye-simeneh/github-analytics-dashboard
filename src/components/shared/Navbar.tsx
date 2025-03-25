@@ -16,7 +16,7 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
 
   const menuItems = isAuthenticated
     ? [
-        { label: "Dashboard", path: "/dashboard" },
+        { label: "Dashboard", path: "/dashboard/home" },
         { label: "Logout", path: "/auth/login", action: logout },
       ]
     : [{ label: "Login", path: "/auth/login" }];

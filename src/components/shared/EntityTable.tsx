@@ -1,10 +1,21 @@
 "use client";
-import { Table, Text, Box } from "@mantine/core";
+
+import { useState } from "react";
+import {
+  Table,
+  Text,
+  Box,
+  TextInput,
+  Pagination,
+  Select,
+  Group,
+} from "@mantine/core";
 
 interface Column<T> {
-  key: keyof T | string; 
+  key: keyof T | string;
   header: string;
-  render?: (item: T) => React.ReactNode; 
+  render?: (item: T) => React.ReactNode;
+  filterable?: boolean; // Allows filtering for this column
 }
 
 interface EntityTableProps<T> {
@@ -18,11 +29,56 @@ export default function EntityTable<T>({
   columns,
   emptyMessage = "No data available",
 }: EntityTableProps<T>) {
+  const [filters, setFilters] = useState<{ [key: string]: string }>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5); // Default page size
+
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setCurrentPage(1); // Reset to first page on filter change
+  };
+
+  // Apply filters
+  const filteredData = data.filter((item) =>
+    columns.every((column) =>
+      filters[column.key as string]
+        ? String(item[column.key as keyof T] || "")
+            .toLowerCase()
+            .includes(filters[column.key as string].toLowerCase())
+        : true
+    )
+  );
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredData.length / pageSize);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
   return (
     <Box style={{ overflowX: "auto" }}>
+      {/* Filters */}
+      <Group grow mb="md">
+        {columns.map(
+          (column) =>
+            column.filterable && (
+              <TextInput
+                key={column.key as string}
+                placeholder={`Filter ${column.header}`}
+                value={filters[column.key as string] || ""}
+                onChange={(e) =>
+                  handleFilterChange(column.key as string, e.target.value)
+                }
+              />
+            )
+        )}
+      </Group>
+
       <Table
         withColumnBorders
         highlightOnHover
+        striped
         verticalSpacing="md"
         horizontalSpacing="md"
       >
@@ -36,8 +92,8 @@ export default function EntityTable<T>({
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {data.length > 0 ? (
-            data.map((item, index) => (
+          {paginatedData.length > 0 ? (
+            paginatedData.map((item, index) => (
               <Table.Tr key={index}>
                 {columns.map((column) => (
                   <Table.Td key={column.key as string}>
@@ -60,6 +116,23 @@ export default function EntityTable<T>({
           )}
         </Table.Tbody>
       </Table>
+
+      {/* Pagination Controls */}
+      <Group mt="md" justify="space-between">
+        <Select
+          value={pageSize.toString()}
+          onChange={(value) => setPageSize(Number(value))}
+          data={["5", "10", "20", "50"]}
+          label="Rows per page"
+          maw={100}
+        />
+        <Pagination
+          total={totalPages}
+          value={currentPage}
+          onChange={setCurrentPage}
+          size="sm"
+        />
+      </Group>
     </Box>
   );
 }

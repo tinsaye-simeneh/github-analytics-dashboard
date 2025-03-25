@@ -31,7 +31,7 @@ export default function DashboardLayout({
     );
 
   return (
-    <div className="justify-between">
+    <div className="flex h-screen justify-between bg-gray-50">
       <Sidebar />
       <main>{children}</main>
     </div>
