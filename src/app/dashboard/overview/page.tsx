@@ -3,10 +3,13 @@ import { useEffect } from "react";
 import { Card, Image, Text, Title } from "@mantine/core";
 import { toast } from "react-toastify";
 import SkeletonLoading from "@/components/shared/SkeletonLoading";
+import NoData from "@/components/shared/NoData";
 import { useGitHubStore } from "@/store/githubStore";
+import { useRouter } from "next/navigation";
 
 export default function Overview() {
   const { user, searchedUsername, fetchUser } = useGitHubStore();
+  const router = useRouter();
 
   useEffect(() => {
     if (!searchedUsername || user) return;
@@ -23,7 +26,14 @@ export default function Overview() {
     loadUser();
   }, [searchedUsername, user, fetchUser]);
 
-  if (!searchedUsername) return <Text>Please search for a user first.</Text>;
+  if (!searchedUsername)
+    return (
+      <NoData
+        title="Please search for a user first"
+        description="Use the search bar to find a GitHub user"
+        onGoBack={() => router.push("/dashboard/home")}
+      />
+    );
   if (!user) return <SkeletonLoading type="profile" />;
 
   return (
