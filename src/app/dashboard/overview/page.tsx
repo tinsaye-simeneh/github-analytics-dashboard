@@ -1,22 +1,27 @@
 "use client";
 import { useState, useEffect } from "react";
+import { GitHubUser } from "@/lib/types";
 import { Card, Image, Text, Title } from "@mantine/core";
 import { toast } from "react-toastify";
 import SkeletonLoading from "@/components/shared/SkeletonLoading";
+import { useAuthStore } from "@/store/authstore";
 
 export default function Overview() {
   const [user, setUser] = useState<GitHubUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { searchedUsername } = useAuthStore();
 
   useEffect(() => {
     const loadUser = async () => {
+      if (!searchedUsername) {
+        setError("No username provided. Please search for a user.");
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await fetch("/api/users");
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-        }
-        const data: GitHubUser = await response.json();
+        const data = await fetchUser(searchedUsername);
         setUser(data);
         toast.success("User data loaded");
       } catch (err: any) {
@@ -26,9 +31,8 @@ export default function Overview() {
         setLoading(false);
       }
     };
-
     loadUser();
-  }, []);
+  }, [searchedUsername]);
 
   if (loading) return <SkeletonLoading type="profile" />;
   if (error) return <Text color="red">{error}</Text>;
