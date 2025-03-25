@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const NotFound = () => {
   return (
-    <Container style={{ textAlign: "center", marginTop: "10vh" }}>
+    <Container style={{ textAlign: "center" }} className="pt-20">
       <Title order={1} className="text-4xl font-bold text-gray-800">
         404 - Page Not Found
       </Title>
