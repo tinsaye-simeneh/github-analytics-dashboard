@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { username: string } }
-) {
-  const { username } = params;
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const username = url.searchParams.get("username");
   const { searchParams } = new URL(request.url);
   const page = searchParams.get("page") || "1";
   const perPage = searchParams.get("per_page") || "10";
