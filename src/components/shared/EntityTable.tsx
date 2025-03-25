@@ -137,7 +137,7 @@ export default function EntityTable<T>({
                 colSpan={columns.length}
                 style={{ textAlign: "center" }}
               >
-                <Text color="dimmed" size={layout === "compact" ? "sm" : "md"}>
+                <Text c="dimmed" size={layout === "compact" ? "sm" : "md"}>
                   {emptyMessage}
                 </Text>
               </Table.Td>

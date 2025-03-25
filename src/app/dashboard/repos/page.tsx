@@ -19,7 +19,6 @@ import {
   Legend,
 } from "chart.js";
 
-// Register chart components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -141,13 +140,12 @@ export default function Repositories() {
   };
 
   return (
-    <div className="pr-5 pl-10 mt-20">
-      <Title order={2} mb="sm">
+    <div className="pr-5 pl-14 mt-20">
+      <Title order={4} mb="sm">
         Repositories
       </Title>
 
-      <div className="mb-8">
-        <Title order={3}>Programming Languages Used</Title>
+      <div className="mb-4" style={{ height: "200px", width: "400px" }}>
         <Bar data={chartData} />
       </div>
 
