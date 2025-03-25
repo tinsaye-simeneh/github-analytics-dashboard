@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/server": "^11.11.0",
     "@mantine/core": "^7.17.2",
+    "@mantine/hooks": "^7.17.2",
     "next": "15.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
