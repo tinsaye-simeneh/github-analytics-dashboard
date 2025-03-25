@@ -12,27 +12,33 @@ import {
   LoadingOverlay,
 } from "@mantine/core";
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
+import { useAuthStore } from "@/store/authStore";
+import { toast } from "react-toastify";
 
 const AuthForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const { login } = useAuthStore();
 
   const { register, handleSubmit } = useForm<FieldValues>();
 
-  //eslint-disable-next-line
-  const handleAuthSubmit: SubmitHandler<FieldValues> = async (data: any) => {
+  const handleAuthSubmit: SubmitHandler<FieldValues> = async (data) => {
     setLoading(true);
     setError("");
 
     try {
       if (data.email === "admin" && data.password === "admin123") {
-        router.push("/");
+        login(data.email);
+        toast.success("Login successful!");
+        router.push("/dashboard");
       } else {
         setError("Invalid username or password");
+        toast.error("Invalid credentials");
       }
     } catch (error) {
       setError("Something went wrong. Please try again.");
+      toast.error("Authentication failed");
       console.error("Authentication failed:", error);
     } finally {
       setLoading(false);
