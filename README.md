@@ -43,8 +43,8 @@ A modern, responsive web application built with Next.js (App Router) and TypeScr
 ### Additional Features
 
 - User search functionality for any GitHub username.
-- Skeleton loaders for improved UX during data fetching (can be added with libraries like `react-loading-skeleton`).
-- SSR/ISR for the Overview tab (possible with Next.js `getServerSideProps` or `revalidate`).
+- Skeleton loaders for improved UX during data fetching (with libraries like `react-loading-skeleton`).
+- chart display for programming languages using chart.js
 
 ## Tech Stack
 
@@ -57,7 +57,7 @@ A modern, responsive web application built with Next.js (App Router) and TypeScr
 
 ## Prerequisites
 
-- Node.js (>= 18.x)
+- Node.js
 - npm
 - Git
 
