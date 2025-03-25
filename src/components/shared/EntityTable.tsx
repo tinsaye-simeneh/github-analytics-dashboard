@@ -22,12 +22,14 @@ interface EntityTableProps<T> {
   data: T[];
   columns: Column<T>[];
   emptyMessage?: string;
+  layout?: "compact" | "comfortable"; // Added layout prop
 }
 
 export default function EntityTable<T>({
   data,
   columns,
   emptyMessage = "No data available",
+  layout = "comfortable", // Default to comfortable
 }: EntityTableProps<T>) {
   const [filters, setFilters] = useState<{ [key: string]: string }>({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -54,10 +56,13 @@ export default function EntityTable<T>({
     currentPage * pageSize
   );
 
+  // Adjust spacing based on layout
+  const spacing = layout === "compact" ? "xs" : "md";
+
   return (
     <Box>
       {/* Filters */}
-      <Group grow mb="md">
+      <Group grow mb={spacing}>
         {columns.map(
           (column) =>
             column.filterable && (
@@ -68,6 +73,7 @@ export default function EntityTable<T>({
                 onChange={(e) =>
                   handleFilterChange(column.key as string, e.target.value)
                 }
+                size={layout === "compact" ? "sm" : "md"}
               />
             )
         )}
@@ -77,8 +83,8 @@ export default function EntityTable<T>({
         withColumnBorders
         highlightOnHover
         striped
-        verticalSpacing="md"
-        horizontalSpacing="md"
+        verticalSpacing={spacing}
+        horizontalSpacing={spacing}
         style={{
           tableLayout: "fixed",
           width: "100%",
@@ -95,7 +101,9 @@ export default function EntityTable<T>({
                   textOverflow: "ellipsis",
                 }}
               >
-                <Text fw={700}>{column.header}</Text>
+                <Text fw={700} size={layout === "compact" ? "sm" : "md"}>
+                  {column.header}
+                </Text>
               </Table.Th>
             ))}
           </Table.Tr>
@@ -113,9 +121,14 @@ export default function EntityTable<T>({
                       textOverflow: "ellipsis",
                     }}
                   >
-                    {column.render
-                      ? column.render(item)
-                      : (item[column.key as keyof T] as React.ReactNode) || "-"}
+                    {column.render ? (
+                      column.render(item)
+                    ) : (
+                      <Text size={layout === "compact" ? "sm" : "md"}>
+                        {(item[column.key as keyof T] as React.ReactNode) ||
+                          "-"}
+                      </Text>
+                    )}
                   </Table.Td>
                 ))}
               </Table.Tr>
@@ -126,26 +139,29 @@ export default function EntityTable<T>({
                 colSpan={columns.length}
                 style={{ textAlign: "center" }}
               >
-                <Text color="dimmed">{emptyMessage}</Text>
+                <Text color="dimmed" size={layout === "compact" ? "sm" : "md"}>
+                  {emptyMessage}
+                </Text>
               </Table.Td>
             </Table.Tr>
           )}
         </Table.Tbody>
       </Table>
 
-      <Group mt="md" justify="space-between">
+      <Group mt={spacing} justify="space-between">
         <Select
           value={pageSize.toString()}
           onChange={(value) => setPageSize(Number(value))}
           data={["5", "10", "20", "50"]}
           label="Rows per page"
           maw={100}
+          size={layout === "compact" ? "sm" : "md"}
         />
         <Pagination
           total={totalPages}
           value={currentPage}
           onChange={setCurrentPage}
-          size="sm"
+          size={layout === "compact" ? "xs" : "sm"}
         />
       </Group>
     </Box>

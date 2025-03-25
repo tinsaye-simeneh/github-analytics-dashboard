@@ -27,7 +27,7 @@ export default function Overview() {
   if (!user) return <SkeletonLoading type="profile" />;
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <Title order={2} mb="lg">
         Overview
       </Title>

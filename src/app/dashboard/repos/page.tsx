@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useGitHubStore } from "@/store/githubStore";
 import EntityTable from "@/components/shared/EntityTable";
 import SkeletonLoading from "@/components/shared/SkeletonLoading";
+import NoData from "@/components/shared/NoData";
 import { GitHubRepo } from "@/lib/types";
 
 export default function Repositories() {
@@ -59,6 +60,16 @@ export default function Repositories() {
 
   if (!searchedUsername) return <Text>Please search for a user first.</Text>;
   if (loading && repos.length === 0) return <SkeletonLoading type="list" />;
+
+  if (repos.length === 0) {
+    return (
+      <NoData
+        title="No Repositories Found"
+        description="The user has no public repositories or we couldn't fetch the data."
+        onRetry={handleLoadMore}
+      />
+    );
+  }
 
   return (
     <div>

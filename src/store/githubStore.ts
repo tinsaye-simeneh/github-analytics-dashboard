@@ -12,6 +12,8 @@ interface GitHubState {
   fetchRepos: (username: string, page?: number) => Promise<void>;
   fetchEvents: (username: string) => Promise<void>;
   clearData: () => void;
+  layout: "compact" | "comfortable";
+  setLayout: (layout: "compact" | "comfortable") => void;
 }
 
 export const useGitHubStore = create<GitHubState>()(
@@ -21,6 +23,8 @@ export const useGitHubStore = create<GitHubState>()(
       user: null,
       repos: [],
       events: [],
+      layout: "comfortable",
+      setLayout: (layout) => set({ layout }),
 
       setSearchedUsername: (username) => set({ searchedUsername: username }),
 
