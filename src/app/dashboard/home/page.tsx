@@ -9,7 +9,7 @@ import { useGitHubStore } from "@/store/githubStore";
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { fetchUser } = useGitHubStore();
+  const { fetchUser, searchedUsername } = useGitHubStore();
   const { register, handleSubmit } = useForm<FieldValues>();
 
   const handleSearch: SubmitHandler<FieldValues> = async (data) => {
@@ -45,7 +45,7 @@ export default function Dashboard() {
           <Stack gap="md">
             <TextInput
               label="GitHub Username"
-              placeholder="Enter a GitHub username (e.g., octocat)"
+              placeholder="Enter a GitHub username (e.g., tinsaye-simeneh)"
               {...register("username", { required: true })}
               disabled={loading}
             />
@@ -58,6 +58,16 @@ export default function Dashboard() {
               Search
             </Button>
           </Stack>
+          {searchedUsername && (
+            <Stack mt="md">
+              <Title order={6} mb="sm">
+                Current Searched User:
+                <span className="text-sm text-blue-600 ml-2">
+                  {searchedUsername}
+                </span>
+              </Title>
+            </Stack>
+          )}
         </form>
       </Paper>
     </div>
