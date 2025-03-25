@@ -49,7 +49,12 @@ export default function Dashboard() {
               {...register("username", { required: true })}
               disabled={loading}
             />
-            <Button type="submit" loading={loading} fullWidth>
+            <Button
+              type="submit"
+              loading={loading}
+              disabled={loading}
+              fullWidth
+            >
               Search
             </Button>
           </Stack>
