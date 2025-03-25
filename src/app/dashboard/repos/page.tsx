@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useGitHubStore } from "@/store/githubStore";
 import EntityTable from "@/components/shared/EntityTable";
 import SkeletonLoading from "@/components/shared/SkeletonLoading";
-import NoData from "@/components/shared/NoData";
+import NoData from "@/components/shared/Nodata";
 import { useRouter } from "next/navigation";
 import { GitHubRepo } from "@/lib/types";
 import { Bar } from "react-chartjs-2";
