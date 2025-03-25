@@ -1,6 +1,7 @@
 "use client";
-import { Box, Text, Group, ActionIcon } from "@mantine/core";
+import { Box, Text, Group, ActionIcon, Button } from "@mantine/core";
 import { IconSun, IconMoon } from "@tabler/icons-react";
+import { useAuthStore } from "@/store/authstore";
 
 interface NavbarProps {
   toggleTheme: () => void;
@@ -8,6 +9,7 @@ interface NavbarProps {
 }
 
 const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
+  const { isAuthenticated } = useAuthStore();
   return (
     <Box
       component="nav"
@@ -29,6 +31,34 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
           GitHub Analytics
         </Text>
         <Group>
+          {isAuthenticated ? (
+            <Group align="center">
+              <Text size="sm" mr="sm">
+                Welcome, {useAuthStore.getState().username}
+              </Text>
+              <Button
+                color="gray"
+                variant="outline"
+                component="a"
+                href="/dashboard"
+              >
+                Dashboard
+              </Button>
+              <Button
+                color="gray"
+                variant="outline"
+                component="a"
+                href="/login"
+              >
+                Logout
+              </Button>
+            </Group>
+          ) : (
+            <Button color="gray" variant="outline" component="a" href="/login">
+              Login
+            </Button>
+          )}
+
           <ActionIcon
             onClick={toggleTheme}
             variant="outline"
