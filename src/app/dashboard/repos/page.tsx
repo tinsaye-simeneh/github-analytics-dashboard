@@ -72,7 +72,7 @@ export default function Repositories() {
   }
 
   return (
-    <div>
+    <div className="px-10">
       <Title order={2} mb="lg">
         Repositories
       </Title>

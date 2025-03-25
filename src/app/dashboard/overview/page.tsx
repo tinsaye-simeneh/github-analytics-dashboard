@@ -27,7 +27,7 @@ export default function Overview() {
   if (!user) return <SkeletonLoading type="profile" />;
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mt-24">
       <Title order={2} mb="lg">
         Overview
       </Title>
@@ -35,8 +35,9 @@ export default function Overview() {
         <Image
           src={user.avatar_url}
           alt="Avatar"
-          width={100}
-          height={100}
+          width={20}
+          height={20}
+          className="w-20 h-20 rounded-full"
           radius="md"
         />
         <Title order={3} mt="md">
