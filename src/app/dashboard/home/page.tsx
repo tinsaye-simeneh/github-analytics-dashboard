@@ -63,12 +63,17 @@ export default function Dashboard() {
             <Stack mt="md">
               <Title order={6} mb="sm">
                 Current Searched User:
-                <span className="text-sm text-blue-600 ml-2">
+                <span className="text-sm text-gray-600 ml-2">
                   {searchedUsername}
+                  <Link href="/dashboard/overview" className="text-blue-400">
+                    {" "}
+                    Go to Overview
+                  </Link>
                 </span>
               </Title>
+
               <span className="text-sm text-gray-600">
-                you can remove this user from the{" "}
+                you can Clear the current data
                 <Link href="/dashboard/settings" className="text-blue-400">
                   {" "}
                   settings page
