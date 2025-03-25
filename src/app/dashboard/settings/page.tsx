@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import {
   Title,
   Button,
@@ -17,27 +17,21 @@ import { IconSun, IconMoon } from "@tabler/icons-react";
 import { useGitHubStore } from "@/store/githubStore";
 import { toast } from "react-toastify";
 
-export default function Settings() {
-  const { searchedUsername, clearData } = useGitHubStore();
+interface SettingsProps {
+  colorScheme: "light" | "dark";
+  toggleTheme: () => void;
+}
 
-  const [layout, setLayout] = useState<"compact" | "comfortable">(
-    "comfortable"
-  );
-  const [colorScheme, setColorScheme] = useState<"light" | "dark">("light");
+export default function Settings({ colorScheme, toggleTheme }: SettingsProps) {
+  const { searchedUsername, clearData, layout, setLayout } = useGitHubStore();
 
   useEffect(() => {
     const savedLayout = localStorage.getItem("layoutPreference") as
       | "compact"
       | "comfortable"
       | null;
-    const savedTheme = localStorage.getItem("colorScheme") as
-      | "light"
-      | "dark"
-      | null;
-
     if (savedLayout) setLayout(savedLayout);
-    if (savedTheme) setColorScheme(savedTheme);
-  }, []);
+  }, [setLayout]);
 
   const handleLayoutChange = (value: string | null) => {
     if (value === "compact" || value === "comfortable") {
@@ -45,13 +39,6 @@ export default function Settings() {
       localStorage.setItem("layoutPreference", value);
       toast.success(`Layout changed to ${value}`);
     }
-  };
-
-  const toggleTheme = () => {
-    const newScheme = colorScheme === "light" ? "dark" : "light";
-    setColorScheme(newScheme);
-    localStorage.setItem("colorScheme", newScheme);
-    toast.success(`Theme switched to ${newScheme} mode`);
   };
 
   const handleClearData = () => {

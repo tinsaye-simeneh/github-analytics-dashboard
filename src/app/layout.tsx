@@ -93,8 +93,12 @@ export default function RootLayout({
           <Suspense fallback={<div>Loading...</div>}>
             {React.Children.map(children, (child) =>
               React.isValidElement(child)
-                ? //eslint-disable-next-line
-                  React.cloneElement(child, { layout } as any)
+                ? React.cloneElement(child, {
+                    layout,
+                    colorScheme,
+                    toggleTheme,
+                    //eslint-disable-next-line
+                  } as any)
                 : child
             )}
           </Suspense>
