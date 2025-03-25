@@ -1,37 +1,27 @@
 "use client";
 
-import { useEffect } from "react";
 import {
   Title,
   Button,
   Stack,
   Text,
   Select,
-  ActionIcon,
   Group,
   Card,
   Container,
   Divider,
 } from "@mantine/core";
-import { IconSun, IconMoon } from "@tabler/icons-react";
+import ThemeToggler from "@/components/shared/ThemeToggler";
 import { useGitHubStore } from "@/store/githubStore";
 import { toast } from "react-toastify";
 
 interface SettingsProps {
-  colorScheme: "light" | "dark";
   toggleTheme: () => void;
+  colorScheme: "light" | "dark";
 }
 
-export default function Settings({ colorScheme, toggleTheme }: SettingsProps) {
+export default function Settings({ toggleTheme, colorScheme }: SettingsProps) {
   const { searchedUsername, clearData, layout, setLayout } = useGitHubStore();
-
-  useEffect(() => {
-    const savedLayout = localStorage.getItem("layoutPreference") as
-      | "compact"
-      | "comfortable"
-      | null;
-    if (savedLayout) setLayout(savedLayout);
-  }, [setLayout]);
 
   const handleLayoutChange = (value: string | null) => {
     if (value === "compact" || value === "comfortable") {
@@ -79,19 +69,7 @@ export default function Settings({ colorScheme, toggleTheme }: SettingsProps) {
             <Text size="md" w={500}>
               Theme: {colorScheme === "light" ? "Light" : "Dark"}
             </Text>
-            <ActionIcon
-              onClick={toggleTheme}
-              variant="outline"
-              size="lg"
-              aria-label="Toggle theme"
-              color={colorScheme === "light" ? "yellow" : "blue"}
-            >
-              {colorScheme === "light" ? (
-                <IconMoon size={18} />
-              ) : (
-                <IconSun size={18} />
-              )}
-            </ActionIcon>
+            <ThemeToggler toggleTheme={toggleTheme} colorScheme={colorScheme} />
           </Group>
 
           <Divider my="md" />

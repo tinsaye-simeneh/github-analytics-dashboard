@@ -1,9 +1,10 @@
 "use client";
 
-import { Box, Group, ActionIcon, Button, Menu, Text } from "@mantine/core";
-import { IconSun, IconMoon, IconMenu2, IconUser } from "@tabler/icons-react";
+import { Box, Group, Button, Menu, Text, ActionIcon } from "@mantine/core";
 import { useAuthStore } from "@/store/authstore";
 import { useRouter } from "next/navigation";
+import ThemeToggler from "./ThemeToggler";
+import { IconUser, IconMenu2, IconSun, IconMoon } from "@tabler/icons-react";
 
 interface NavbarProps {
   toggleTheme: () => void;
@@ -68,18 +69,7 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
             </Button>
           ))}
 
-          <ActionIcon
-            onClick={toggleTheme}
-            variant="outline"
-            size="lg"
-            aria-label="Toggle theme"
-          >
-            {colorScheme === "light" ? (
-              <IconMoon size={18} />
-            ) : (
-              <IconSun size={18} />
-            )}
-          </ActionIcon>
+          <ThemeToggler toggleTheme={toggleTheme} colorScheme={colorScheme} />
         </Group>
 
         <Box hiddenFrom="md">
