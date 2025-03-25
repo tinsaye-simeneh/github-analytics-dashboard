@@ -5,6 +5,7 @@ import { TextInput, Button, Stack, Title, Paper } from "@mantine/core";
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useGitHubStore } from "@/store/githubStore";
+import Link from "next/link";
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
@@ -66,6 +67,13 @@ export default function Dashboard() {
                   {searchedUsername}
                 </span>
               </Title>
+              <span className="text-sm text-gray-600">
+                you can remove this user from the{" "}
+                <Link href="/dashboard/settings" className="text-blue-400">
+                  {" "}
+                  settings page
+                </Link>
+              </span>
             </Stack>
           )}
         </form>
