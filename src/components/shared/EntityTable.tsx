@@ -30,7 +30,7 @@ export default function EntityTable<T>({
   columns,
   emptyMessage = "No data available",
 }: EntityTableProps<T>) {
-  const { layout } = useGitHubStore(); // Fetch layout from the store
+  const { layout } = useGitHubStore();
   const [filters, setFilters] = useState<{ [key: string]: string }>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);

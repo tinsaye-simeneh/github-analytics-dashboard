@@ -20,7 +20,6 @@ const NoData = ({ title, description, onRetry, onGoBack }: NoDataProps) => {
       >
         <div className="flex justify-center items-center mb-4">
           {" "}
-          {/* Ensure icon is centered */}
           <IconAlertCircle size={48} className="text-gray-500" />
         </div>
         <Title order={3} className="text-center text-gray-800">
