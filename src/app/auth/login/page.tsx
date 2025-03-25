@@ -96,6 +96,9 @@ const AuthForm: React.FC = () => {
           <Button type="submit" fullWidth loading={loading} color="blue">
             Login
           </Button>
+          <Text size="sm" className="text-center text-gray-500">
+            username: admin, password: admin123
+          </Text>
         </form>
       </Paper>
     </div>
