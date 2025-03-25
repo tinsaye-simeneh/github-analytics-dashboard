@@ -9,7 +9,6 @@ import { useAuthStore } from "@/store/authstore";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { redirect } from "next/navigation";
 
 export default function RootLayout({
   children,
@@ -59,7 +58,7 @@ export default function RootLayout({
 
   useEffect(() => {
     if (!isAuthenticated && pathname !== "/login") {
-      redirect("/auth/login");
+      router.push("/auth/login");
     }
   }, [isAuthenticated, pathname, router]);
 
