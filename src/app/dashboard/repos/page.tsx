@@ -1,31 +1,34 @@
 "use client";
 import { useState, useEffect } from "react";
-import { GitHubRepo } from "@/lib/types";
-import { Title } from "@mantine/core";
+import { Title, Text, Button } from "@mantine/core";
 import { toast } from "react-toastify";
+import { useGitHubStore } from "@/store/githubStore";
 import EntityTable from "@/components/shared/EntityTable";
 import SkeletonLoading from "@/components/shared/SkeletonLoading";
+import { GitHubRepo } from "@/lib/types";
 
 export default function Repositories() {
-  const [repos, setRepos] = useState<GitHubRepo[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const { searchedUsername, repos, fetchRepos } = useGitHubStore();
 
   useEffect(() => {
-    // const loadRepos = async () => {
-    //   setLoading(true);
-    //   try {
-    //     const data = await fetchRepos("octocat", page);
-    //     setRepos((prev) => [...prev, ...data]);
-    //     toast.success(`Loaded page ${page} of repositories`);
-    //   } catch (err) {
-    //     toast.error("Failed to load repositories");
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
-    // loadRepos();
-  }, [page]);
+    if (!searchedUsername || repos.length > 0) return;
+
+    const loadRepos = async () => {
+      setLoading(true);
+      try {
+        await fetchRepos(searchedUsername, page);
+        toast.success(`Loaded page ${page} of repositories`);
+        //eslint-disable-next-line
+      } catch (err: any) {
+        toast.error(err.message || "Failed to load repositories");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadRepos();
+  }, [searchedUsername, page, fetchRepos, repos.length]);
 
   const columns = [
     { key: "name", header: "Name" },
@@ -40,6 +43,21 @@ export default function Repositories() {
     },
   ];
 
+  const handleLoadMore = async () => {
+    setLoading(true);
+    try {
+      await fetchRepos(searchedUsername!, page + 1);
+      setPage((prev) => prev + 1);
+      toast.success(`Loaded page ${page + 1} of repositories`);
+      //eslint-disable-next-line
+    } catch (err: any) {
+      toast.error(err.message || "Failed to load more repositories");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!searchedUsername) return <Text>Please search for a user first.</Text>;
   if (loading && repos.length === 0) return <SkeletonLoading type="list" />;
 
   return (
@@ -48,20 +66,15 @@ export default function Repositories() {
         Repositories
       </Title>
       <EntityTable data={repos} columns={columns} />
-      <button
-        onClick={() => setPage((p) => p + 1)}
-        disabled={loading}
-        style={{
-          marginTop: "1rem",
-          padding: "0.5rem 1rem",
-          backgroundColor: "#007bff",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-        }}
+      <Button
+        onClick={handleLoadMore}
+        loading={loading}
+        mt="md"
+        fullWidth={false}
+        disabled={!searchedUsername || repos.length === 0}
       >
-        {loading ? "Loading..." : "Load More"}
-      </button>
+        Load More
+      </Button>
     </div>
   );
 }

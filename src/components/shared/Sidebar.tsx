@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 
 export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(true); 
+  const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
 
   const tabs = [
@@ -25,8 +25,8 @@ export default function Sidebar() {
         size="sm"
         style={{
           position: "fixed",
-          top: 50,
-          left: isOpen ? 260 : 20, 
+          top: 60,
+          left: isOpen ? 260 : 20,
           zIndex: 1000,
           transition: "left 0.3s ease",
         }}

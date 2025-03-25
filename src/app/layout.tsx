@@ -57,7 +57,7 @@ export default function RootLayout({
   }, [pathname]);
 
   useEffect(() => {
-    if (!isAuthenticated && pathname !== "/login") {
+    if (!isAuthenticated && pathname !== "/auth/login") {
       router.push("/auth/login");
     }
   }, [isAuthenticated, pathname, router]);
