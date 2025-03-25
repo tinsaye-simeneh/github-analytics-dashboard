@@ -8,6 +8,26 @@ import SkeletonLoading from "@/components/shared/SkeletonLoading";
 import NoData from "@/components/shared/NoData";
 import { useRouter } from "next/navigation";
 import { GitHubRepo } from "@/lib/types";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title as ChartTitle,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+// Registering Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ChartTitle,
+  Tooltip,
+  Legend
+);
 
 export default function Repositories() {
   const [page, setPage] = useState(1);
@@ -43,6 +63,13 @@ export default function Repositories() {
       header: "Last Updated",
       render: (item: GitHubRepo) =>
         new Date(item.updated_at).toLocaleDateString(),
+    },
+    {
+      key: "languages",
+      header: "Programming Languages",
+      render: (item: GitHubRepo) => (
+        <LanguageChart languagesUrl={item.languages_url} />
+      ),
     },
   ];
 
@@ -107,3 +134,37 @@ export default function Repositories() {
     </div>
   );
 }
+
+const LanguageChart = ({ languagesUrl }: { languagesUrl: string }) => {
+  //eslint-disable-next-line
+  const [languagesData, setLanguagesData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      try {
+        const response = await fetch(languagesUrl);
+        const data = await response.json();
+        const labels = Object.keys(data);
+        const datasets = [
+          {
+            label: "Languages",
+            data: Object.values(data),
+            backgroundColor: "rgba(75, 192, 192, 0.6)",
+          },
+        ];
+
+        setLanguagesData({
+          labels,
+          datasets,
+        });
+      } catch (error) {
+        console.error("Error fetching languages:", error);
+      }
+    };
+    fetchLanguages();
+  }, [languagesUrl]);
+
+  if (!languagesData) return <SkeletonLoading />;
+
+  return <Bar data={languagesData} options={{ responsive: true }} />;
+};
