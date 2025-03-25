@@ -64,8 +64,8 @@ export default function Repositories() {
     return (
       <div className="flex justify-center items-center h-full">
         <NoData
-          title="No User Found"
-          description="Please search for a user to view their repositories."
+          title="Please search for a user first"
+          description="Use the search bar to find a GitHub user"
           onGoBack={() => router.push("/dashboard/home")}
         />
       </div>
