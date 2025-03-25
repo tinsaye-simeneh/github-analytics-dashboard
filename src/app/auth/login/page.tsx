@@ -12,7 +12,7 @@ import {
   LoadingOverlay,
 } from "@mantine/core";
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
-import { useAuthStore } from "@/store/authStore";
+import { useAuthStore } from "@/store/authstore";
 import { toast } from "react-toastify";
 
 const AuthForm: React.FC = () => {
