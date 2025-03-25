@@ -1,8 +1,10 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authstore";
 import Sidebar from "@/components/shared/Sidebar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Loader, Center } from "@mantine/core";
 
 export default function DashboardLayout({
   children,
@@ -11,12 +13,22 @@ export default function DashboardLayout({
 }) {
   const { isAuthenticated } = useAuthStore();
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isAuthenticated) router.push("/login");
+    if (!isAuthenticated) {
+      router.replace("/auth/login");
+    } else {
+      setLoading(false);
+    }
   }, [isAuthenticated, router]);
 
-  if (!isAuthenticated) return null;
+  if (loading)
+    return (
+      <Center style={{ height: "100vh" }}>
+        <Loader size="lg" />
+      </Center>
+    );
 
   return (
     <div style={{ display: "flex" }}>
