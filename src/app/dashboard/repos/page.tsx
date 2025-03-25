@@ -140,7 +140,7 @@ export default function Repositories() {
   };
 
   return (
-    <div className="pr-5 pl-14 mt-20">
+    <div className="pr-5 md:pl-14 pl-5 mt-20">
       <Title order={4} mb="sm">
         Repositories
       </Title>

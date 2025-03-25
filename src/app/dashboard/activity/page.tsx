@@ -55,7 +55,7 @@ export default function Activity() {
     );
 
   return (
-    <div className="pl-14 px-5 pt-20">
+    <div className="md:pl-14 px-5 pt-20">
       <Title order={2} mb="lg">
         Activity
       </Title>

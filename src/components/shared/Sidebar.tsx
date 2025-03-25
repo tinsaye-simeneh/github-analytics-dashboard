@@ -42,6 +42,7 @@ export default function Sidebar() {
         component="aside"
         w={isOpen ? 250 : isMobile ? 0 : 250}
         h="100vh"
+        bg={isMobile ? "gray.1" : "gray.0"}
         style={{
           position: "fixed",
           top: 60,

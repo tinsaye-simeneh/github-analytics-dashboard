@@ -47,7 +47,7 @@ export default function Settings({ colorScheme, toggleTheme }: SettingsProps) {
   };
 
   return (
-    <Container size="sm" mb="xl" className="mt-30">
+    <Container size="sm" mb="xl" className="md:mt-30 mt-22">
       <Title order={2} mb="lg" c="gray">
         Settings
       </Title>
