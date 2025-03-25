@@ -74,7 +74,7 @@ export default function Repositories() {
 
   if (loading && repos.length === 0)
     return (
-      <div className="px-10">
+      <div className="px-10 pt-20">
         <SkeletonLoading />
       </div>
     );

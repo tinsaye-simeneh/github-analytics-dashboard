@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Card, Image, Text, Title } from "@mantine/core";
 import { toast } from "react-toastify";
 import SkeletonLoading from "@/components/shared/SkeletonLoading";
-import NoData from "@/components/shared/Nodata";
+import NoData from "@/components/shared/NoData";
 import { useGitHubStore } from "@/store/githubStore";
 import { useRouter } from "next/navigation";
 
