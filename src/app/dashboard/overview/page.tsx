@@ -1,65 +1,52 @@
 "use client";
-import { useState, useEffect } from "react";
-import { GitHubUser } from "@/lib/types";
+import { useEffect } from "react";
 import { Card, Image, Text, Title } from "@mantine/core";
 import { toast } from "react-toastify";
 import SkeletonLoading from "@/components/shared/SkeletonLoading";
-import { useAuthStore } from "@/store/authstore";
+import { useGitHubStore } from "@/store/githubStore";
 
 export default function Overview() {
-  const [user, setUser] = useState<GitHubUser | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { searchedUsername } = useAuthStore();
+  const { user, searchedUsername, fetchUser } = useGitHubStore();
 
   useEffect(() => {
-    const loadUser = async () => {
-      if (!searchedUsername) {
-        setError("No username provided. Please search for a user.");
-        setLoading(false);
-        return;
-      }
+    if (!searchedUsername || user) return;
 
+    const loadUser = async () => {
       try {
-        const data = await fetchUser(searchedUsername);
-        setUser(data);
+        await fetchUser(searchedUsername);
         toast.success("User data loaded");
+        //eslint-disable-next-line
       } catch (err: any) {
-        setError(err.message || "Failed to load user data");
         toast.error(err.message || "Error fetching user data");
-      } finally {
-        setLoading(false);
       }
     };
     loadUser();
-  }, [searchedUsername]);
+  }, [searchedUsername, user, fetchUser]);
 
-  if (loading) return <SkeletonLoading type="profile" />;
-  if (error) return <Text color="red">{error}</Text>;
+  if (!searchedUsername) return <Text>Please search for a user first.</Text>;
+  if (!user) return <SkeletonLoading type="profile" />;
 
   return (
     <div>
       <Title order={2} mb="lg">
         Overview
       </Title>
-      {user && (
-        <Card shadow="sm" p="lg" withBorder>
-          <Image
-            src={user.avatar_url}
-            alt="Avatar"
-            width={100}
-            height={100}
-            radius="md"
-          />
-          <Title order={3} mt="md">
-            {user.name}
-          </Title>
-          <Text>{user.bio}</Text>
-          <Text>Repos: {user.public_repos}</Text>
-          <Text>Followers: {user.followers}</Text>
-          <Text>Following: {user.following}</Text>
-        </Card>
-      )}
+      <Card shadow="sm" p="lg" withBorder>
+        <Image
+          src={user.avatar_url}
+          alt="Avatar"
+          width={100}
+          height={100}
+          radius="md"
+        />
+        <Title order={3} mt="md">
+          {user.name}
+        </Title>
+        <Text>{user.bio}</Text>
+        <Text>Repos: {user.public_repos}</Text>
+        <Text>Followers: {user.followers}</Text>
+        <Text>Following: {user.following}</Text>
+      </Card>
     </div>
   );
 }

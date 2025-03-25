@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import { TextInput, Button, Stack, Title, Paper } from "@mantine/core";
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useAuthStore } from "@/store/authstore";
+import { useGitHubStore } from "@/store/githubStore";
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { setSearchedUsername } = useAuthStore();
+  const { fetchUser } = useGitHubStore();
   const { register, handleSubmit } = useForm<FieldValues>();
 
   const handleSearch: SubmitHandler<FieldValues> = async (data) => {
@@ -17,15 +17,8 @@ export default function Dashboard() {
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/users/${username}`);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "User not found");
-      }
-
-      const userData = await response.json();
-      setSearchedUsername(username);
-      toast.success(`Found user: ${userData.login}`);
+      await fetchUser(username);
+      toast.success(`Found user: ${username}`);
       router.push("/dashboard/overview");
       //eslint-disable-next-line
     } catch (error: any) {
