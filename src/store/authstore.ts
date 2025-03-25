@@ -4,8 +4,10 @@ import { persist } from "zustand/middleware";
 interface AuthState {
   isAuthenticated: boolean;
   username: string | null;
+  searchedUsername: string | null;
   login: (username: string) => void;
   logout: () => void;
+  setSearchedUsername: (searchedUsername: string) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -13,6 +15,7 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       isAuthenticated: false,
       username: null,
+      searchedUsername: null,
 
       login: (username) => {
         if (!get().isAuthenticated) {
@@ -22,8 +25,16 @@ export const useAuthStore = create<AuthState>()(
 
       logout: () => {
         if (get().isAuthenticated) {
-          set({ isAuthenticated: false, username: null });
+          set({
+            isAuthenticated: false,
+            username: null,
+            searchedUsername: null,
+          });
         }
+      },
+
+      setSearchedUsername: (searchedUsername) => {
+        set({ searchedUsername });
       },
     }),
     { name: "auth-storage" }
