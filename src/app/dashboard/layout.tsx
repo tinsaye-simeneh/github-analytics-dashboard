@@ -31,11 +31,9 @@ export default function DashboardLayout({
     );
 
   return (
-    <div style={{ display: "flex" }}>
+    <div className="justify-between">
       <Sidebar />
-      <main style={{ marginLeft: "250px", paddingTop: "60px", width: "100%" }}>
-        {children}
-      </main>
+      <main>{children}</main>
     </div>
   );
 }
