@@ -43,7 +43,7 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
       }}
     >
       <Group justify="space-between" align="center" style={{ height: "100%" }}>
-        <Text size="lg" fw={700}>
+        <Text size="lg" fw={700} c="blue">
           GitHub Analytics
         </Text>
 

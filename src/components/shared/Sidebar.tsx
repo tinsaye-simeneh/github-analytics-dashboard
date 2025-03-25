@@ -21,7 +21,6 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Hide button on PC screens */}
       {isMobile && (
         <Button
           onClick={() => setIsOpen(!isOpen)}
@@ -39,12 +38,10 @@ export default function Sidebar() {
         </Button>
       )}
 
-      {/* Sidebar */}
       <Box
         component="aside"
-        w={isOpen ? 250 : isMobile ? 0 : 250} // Hide on mobile when collapsed
+        w={isOpen ? 250 : isMobile ? 0 : 250}
         h="100vh"
-        bg="gray.1"
         style={{
           position: "fixed",
           top: 60,
@@ -70,10 +67,10 @@ export default function Sidebar() {
                 label={tab.name}
                 component={Link}
                 href={tab.path}
-                variant="light"
                 active={isActive}
                 style={{
                   backgroundColor: isActive ? "#E0E0E0" : "transparent",
+                  color: isActive ? "black" : "gray",
                   borderRadius: "8px",
                   padding: "10px",
                 }}
