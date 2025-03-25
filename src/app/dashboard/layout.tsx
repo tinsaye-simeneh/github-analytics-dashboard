@@ -31,9 +31,12 @@ export default function DashboardLayout({
     );
 
   return (
-    <div className="flex h-screen justify-between bg-gray-50">
-      <Sidebar />
-      <main>{children}</main>
+    <div className="flex w-full">
+      <div className="md:w-64 h-screen">
+        <Sidebar />
+      </div>
+
+      <main className="flex-1 p-4">{children}</main>
     </div>
   );
 }
