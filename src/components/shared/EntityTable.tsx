@@ -15,7 +15,7 @@ interface Column<T> {
   key: keyof T | string;
   header: string;
   render?: (item: T) => React.ReactNode;
-  filterable?: boolean; // Allows filtering for this column
+  filterable?: boolean;
 }
 
 interface EntityTableProps<T> {
@@ -31,14 +31,13 @@ export default function EntityTable<T>({
 }: EntityTableProps<T>) {
   const [filters, setFilters] = useState<{ [key: string]: string }>({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5); // Default page size
+  const [pageSize, setPageSize] = useState(5);
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
-    setCurrentPage(1); // Reset to first page on filter change
+    setCurrentPage(1);
   };
 
-  // Apply filters
   const filteredData = data.filter((item) =>
     columns.every((column) =>
       filters[column.key as string]
@@ -49,7 +48,6 @@ export default function EntityTable<T>({
     )
   );
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredData.length / pageSize);
   const paginatedData = filteredData.slice(
     (currentPage - 1) * pageSize,
@@ -57,7 +55,7 @@ export default function EntityTable<T>({
   );
 
   return (
-    <Box style={{ overflowX: "auto" }}>
+    <Box>
       {/* Filters */}
       <Group grow mb="md">
         {columns.map(
@@ -81,11 +79,22 @@ export default function EntityTable<T>({
         striped
         verticalSpacing="md"
         horizontalSpacing="md"
+        style={{
+          tableLayout: "fixed",
+          width: "100%",
+        }}
       >
         <Table.Thead>
           <Table.Tr>
             {columns.map((column) => (
-              <Table.Th key={column.key as string}>
+              <Table.Th
+                key={column.key as string}
+                style={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
                 <Text fw={700}>{column.header}</Text>
               </Table.Th>
             ))}
@@ -96,7 +105,14 @@ export default function EntityTable<T>({
             paginatedData.map((item, index) => (
               <Table.Tr key={index}>
                 {columns.map((column) => (
-                  <Table.Td key={column.key as string}>
+                  <Table.Td
+                    key={column.key as string}
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
                     {column.render
                       ? column.render(item)
                       : (item[column.key as keyof T] as React.ReactNode) || "-"}
@@ -117,7 +133,6 @@ export default function EntityTable<T>({
         </Table.Tbody>
       </Table>
 
-      {/* Pagination Controls */}
       <Group mt="md" justify="space-between">
         <Select
           value={pageSize.toString()}
