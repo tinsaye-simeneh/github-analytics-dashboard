@@ -46,16 +46,17 @@ const AuthForm: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center bg-gray-800 h-[calc(100vh-4.2rem)]">
+    <div className="flex items-center justify-center h-screen">
       <Paper
         shadow="md"
         radius="md"
-        p="lg"
+        px="lg"
+        py="xl"
         withBorder
         className="max-w-sm w-full relative"
       >
         <LoadingOverlay visible={loading} />
-        <Title order={2} className="text-center text-sky-500 mb-4">
+        <Title order={2} className="text-center text-sky-500" mb="20">
           Login
         </Title>
 
