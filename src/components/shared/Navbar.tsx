@@ -1,9 +1,10 @@
 "use client";
 
-import { Box, Group, ActionIcon, Button, Menu, Text } from "@mantine/core";
-import { IconSun, IconMoon, IconMenu2, IconUser } from "@tabler/icons-react";
+import { Box, Group, Button, Menu, Text, ActionIcon } from "@mantine/core";
 import { useAuthStore } from "@/store/authstore";
 import { useRouter } from "next/navigation";
+import ThemeToggler from "./ThemeToggler";
+import { IconUser, IconMenu2, IconSun, IconMoon } from "@tabler/icons-react";
 
 interface NavbarProps {
   toggleTheme: () => void;
@@ -43,15 +44,17 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
       }}
     >
       <Group justify="space-between" align="center" style={{ height: "100%" }}>
-        <Text size="lg" fw={700}>
+        <Text size="lg" fw={700} c="blue">
           GitHub Analytics
         </Text>
 
         <Group visibleFrom="md">
           {isAuthenticated && (
-            <Group align="center">
-              <IconUser size={18} />
-              <Text size="sm">{username}</Text>
+            <Group align="center" className="p-2" gap={4}>
+              <IconUser size={18} color="black" />
+              <Text size="sm" c="blue">
+                {username}
+              </Text>
             </Group>
           )}
 
@@ -66,18 +69,7 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
             </Button>
           ))}
 
-          <ActionIcon
-            onClick={toggleTheme}
-            variant="outline"
-            size="lg"
-            aria-label="Toggle theme"
-          >
-            {colorScheme === "light" ? (
-              <IconMoon size={18} />
-            ) : (
-              <IconSun size={18} />
-            )}
-          </ActionIcon>
+          <ThemeToggler toggleTheme={toggleTheme} colorScheme={colorScheme} />
         </Group>
 
         <Box hiddenFrom="md">

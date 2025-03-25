@@ -5,11 +5,12 @@ import { TextInput, Button, Stack, Title, Paper } from "@mantine/core";
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useGitHubStore } from "@/store/githubStore";
+import Link from "next/link";
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { fetchUser } = useGitHubStore();
+  const { fetchUser, searchedUsername } = useGitHubStore();
   const { register, handleSubmit } = useForm<FieldValues>();
 
   const handleSearch: SubmitHandler<FieldValues> = async (data) => {
@@ -45,14 +46,41 @@ export default function Dashboard() {
           <Stack gap="md">
             <TextInput
               label="GitHub Username"
-              placeholder="Enter a GitHub username (e.g., octocat)"
+              placeholder="Enter a GitHub username (e.g., tinsaye-simeneh)"
               {...register("username", { required: true })}
               disabled={loading}
             />
-            <Button type="submit" loading={loading} fullWidth>
+            <Button
+              type="submit"
+              loading={loading}
+              disabled={loading}
+              fullWidth
+            >
               Search
             </Button>
           </Stack>
+          {searchedUsername && (
+            <Stack mt="md">
+              <Title order={6} mb="sm">
+                Current Searched User:
+                <span className="text-sm text-gray-600 ml-2">
+                  {searchedUsername}
+                  <Link href="/dashboard/overview" className="text-blue-400">
+                    {" "}
+                    Go to Overview
+                  </Link>
+                </span>
+              </Title>
+
+              <span className="text-sm text-gray-600">
+                you can Clear the current data
+                <Link href="/dashboard/settings" className="text-blue-400">
+                  {" "}
+                  settings page
+                </Link>
+              </span>
+            </Stack>
+          )}
         </form>
       </Paper>
     </div>

@@ -3,9 +3,16 @@ export interface GitHubUser {
   avatar_url: string;
   name: string | null;
   bio: string | null;
+  location: string | null;
+  company: string | null;
+  blog: string | null;
+  email: string | null;
+  hireable: boolean;
   public_repos: number;
   followers: number;
   following: number;
+  created_at: string;
+  html_url: string;
 }
 
 export interface GitHubRepo {

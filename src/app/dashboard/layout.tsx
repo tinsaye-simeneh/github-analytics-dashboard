@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/authstore";
 import Sidebar from "@/components/shared/Sidebar";
 import { useEffect, useState } from "react";
@@ -13,22 +13,33 @@ export default function DashboardLayout({
 }) {
   const { isAuthenticated } = useAuthStore();
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const pathname = usePathname();
+  const [loadingAuth, setLoadingAuth] = useState(true);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/auth/login");
-    } else {
-      setLoading(false);
-    }
-  }, [isAuthenticated, router]);
+    const timeoutId = setTimeout(() => {
+      if (isAuthenticated === undefined) {
+        setLoadingAuth(true);
+        return;
+      }
 
-  if (loading)
+      if (!isAuthenticated) {
+        router.push(`/auth/login?backTo=${encodeURIComponent(pathname)}`);
+      } else {
+        setLoadingAuth(false);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [isAuthenticated, router, pathname]);
+
+  if (loadingAuth) {
     return (
       <Center style={{ height: "100vh" }}>
         <Loader size="lg" />
       </Center>
     );
+  }
 
   return (
     <div className="flex w-full">
@@ -36,7 +47,7 @@ export default function DashboardLayout({
         <Sidebar />
       </div>
 
-      <main className="flex-1 p-4">{children}</main>
+      <main className="w-full mt-10 md:mt-0">{children}</main>
     </div>
   );
 }

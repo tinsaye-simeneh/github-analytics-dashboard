@@ -1,14 +1,16 @@
 "use client";
 
 import "@mantine/core/styles.css";
-import { MantineProvider, Progress } from "@mantine/core";
+import { MantineProvider, Progress, Center, Loader } from "@mantine/core";
 import { useEffect, useState, Suspense } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/components/shared/Navbar";
 import { useAuthStore } from "@/store/authstore";
-import "./globals.css";
+import { useGitHubStore } from "@/store/githubStore";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import React from "react";
+import "./globals.css";
 
 export default function RootLayout({
   children,
@@ -18,23 +20,26 @@ export default function RootLayout({
   const pathname = usePathname();
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
+  const { layout, colorScheme, setColorScheme } = useGitHubStore();
   const [progress, setProgress] = useState(0);
   const [isPageLoading, setIsPageLoading] = useState(false);
-  const [colorScheme, setColorScheme] = useState<"light" | "dark">("light");
+  const [loadingAuth, setLoadingAuth] = useState(true);
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") as
       | "light"
       | "dark"
       | null;
-    if (storedTheme) {
+    if (storedTheme && !colorScheme) {
       setColorScheme(storedTheme);
     }
-  }, []);
+  }, [colorScheme, setColorScheme]);
 
   useEffect(() => {
-    localStorage.setItem("theme", colorScheme);
-    document.documentElement.setAttribute("data-theme", colorScheme);
+    if (colorScheme) {
+      localStorage.setItem("theme", colorScheme);
+      document.documentElement.setAttribute("data-theme", colorScheme);
+    }
   }, [colorScheme]);
 
   useEffect(() => {
@@ -57,13 +62,25 @@ export default function RootLayout({
   }, [pathname]);
 
   useEffect(() => {
-    if (!isAuthenticated && pathname !== "/auth/login") {
-      router.push("/auth/login");
-    }
-  }, [isAuthenticated, pathname, router]);
+    const timeoutId = setTimeout(() => {
+      if (isAuthenticated === undefined) {
+        setLoadingAuth(true);
+        return;
+      }
+
+      if (!isAuthenticated) {
+        router.push("/auth/login");
+      } else {
+        setLoadingAuth(false);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [isAuthenticated, router, pathname]);
 
   const toggleTheme = () => {
-    setColorScheme((prev) => (prev === "light" ? "dark" : "light"));
+    const newColorScheme = colorScheme === "light" ? "dark" : "light";
+    setColorScheme(newColorScheme);
   };
 
   return (
@@ -87,9 +104,28 @@ export default function RootLayout({
               }}
             />
           )}
+
           <ToastContainer position="top-right" autoClose={3000} />
+
           <Navbar toggleTheme={toggleTheme} colorScheme={colorScheme} />
-          <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+
+          {loadingAuth && (
+            <Center style={{ height: "100vh" }}>
+              <Loader size="lg" />
+            </Center>
+          )}
+          <Suspense fallback={<div>Loading...</div>}>
+            {React.Children.map(children, (child) =>
+              React.isValidElement(child)
+                ? React.cloneElement(child, {
+                    layout,
+                    colorScheme,
+                    toggleTheme,
+                    //eslint-disable-next-line
+                  } as any)
+                : child
+            )}
+          </Suspense>
         </MantineProvider>
       </body>
     </html>

@@ -1,15 +1,18 @@
 "use client";
+
 import { useState } from "react";
 import { Box, Text, NavLink, Stack, Button } from "@mantine/core";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import { useMediaQuery } from "@mantine/hooks";
+import { useGitHubStore } from "@/store/githubStore";
 
 export default function Sidebar() {
-  const isMobile = useMediaQuery("(max-width: 1024px)"); // Detect mobile screens
-  const [isOpen, setIsOpen] = useState(!isMobile); // Default open on PC, collapsible on mobile
+  const isMobile = useMediaQuery("(max-width: 1024px)");
+  const [isOpen, setIsOpen] = useState(!isMobile);
   const pathname = usePathname();
+  const { colorScheme } = useGitHubStore();
 
   const tabs = [
     { name: "Home", path: "/dashboard/home" },
@@ -19,9 +22,12 @@ export default function Sidebar() {
     { name: "Settings", path: "/dashboard/settings" },
   ];
 
+  const handleRouteChange = () => {
+    if (isMobile) setIsOpen(false);
+  };
+
   return (
     <>
-      {/* Hide button on PC screens */}
       {isMobile && (
         <Button
           onClick={() => setIsOpen(!isOpen)}
@@ -39,12 +45,10 @@ export default function Sidebar() {
         </Button>
       )}
 
-      {/* Sidebar */}
       <Box
         component="aside"
-        w={isOpen ? 250 : isMobile ? 0 : 250} // Hide on mobile when collapsed
+        w={isOpen ? 250 : isMobile ? 0 : 250}
         h="100vh"
-        bg="gray.1"
         style={{
           position: "fixed",
           top: 60,
@@ -53,6 +57,7 @@ export default function Sidebar() {
           overflow: "hidden",
           transition: "width 0.3s ease",
           zIndex: 999,
+          backgroundColor: colorScheme === "dark" ? "#2A2A2A" : "#FFFFFF",
         }}
         p={isOpen ? "md" : 0}
       >
@@ -70,10 +75,11 @@ export default function Sidebar() {
                 label={tab.name}
                 component={Link}
                 href={tab.path}
-                variant="light"
                 active={isActive}
+                onClick={handleRouteChange}
                 style={{
                   backgroundColor: isActive ? "#E0E0E0" : "transparent",
+                  color: isActive ? "black" : "gray",
                   borderRadius: "8px",
                   padding: "10px",
                 }}

@@ -7,11 +7,15 @@ interface GitHubState {
   user: GitHubUser | null;
   repos: GitHubRepo[];
   events: GitHubEvent[];
+  layout: "compact" | "comfortable";
+  colorScheme: "light" | "dark";
   setSearchedUsername: (username: string) => void;
   fetchUser: (username: string) => Promise<void>;
   fetchRepos: (username: string, page?: number) => Promise<void>;
   fetchEvents: (username: string) => Promise<void>;
   clearData: () => void;
+  setLayout: (layout: "compact" | "comfortable") => void;
+  setColorScheme: (colorScheme: "light" | "dark") => void;
 }
 
 export const useGitHubStore = create<GitHubState>()(
@@ -21,6 +25,11 @@ export const useGitHubStore = create<GitHubState>()(
       user: null,
       repos: [],
       events: [],
+      layout: "comfortable",
+      colorScheme: "light",
+
+      setLayout: (layout) => set({ layout }),
+      setColorScheme: (colorScheme) => set({ colorScheme }),
 
       setSearchedUsername: (username) => set({ searchedUsername: username }),
 
@@ -72,7 +81,12 @@ export const useGitHubStore = create<GitHubState>()(
       },
 
       clearData: () =>
-        set({ user: null, repos: [], events: [], searchedUsername: null }),
+        set({
+          user: null,
+          repos: [],
+          events: [],
+          searchedUsername: null,
+        }),
     }),
     { name: "github-storage" }
   )
