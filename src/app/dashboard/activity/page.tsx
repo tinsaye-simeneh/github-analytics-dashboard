@@ -47,12 +47,15 @@ export default function Activity() {
     );
   }
 
-  if (events.length === 0) {
-    return <SkeletonLoading type="activity" />;
-  }
+  if (events.length === 0)
+    return (
+      <div className="px-10 pt-20">
+        <SkeletonLoading />
+      </div>
+    );
 
   return (
-    <div>
+    <div className="pl-14 px-5 pt-20">
       <Title order={2} mb="lg">
         Activity
       </Title>
