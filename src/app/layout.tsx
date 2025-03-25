@@ -3,11 +3,13 @@
 import "@mantine/core/styles.css";
 import { MantineProvider, Progress } from "@mantine/core";
 import { useEffect, useState, Suspense } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/components/shared/Navbar";
+import { useAuthStore } from "@/store/authstore";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { redirect } from "next/navigation";
 
 export default function RootLayout({
   children,
@@ -15,6 +17,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { isAuthenticated } = useAuthStore();
   const [progress, setProgress] = useState(0);
   const [isPageLoading, setIsPageLoading] = useState(false);
   const [colorScheme, setColorScheme] = useState<"light" | "dark">("light");
@@ -52,6 +56,12 @@ export default function RootLayout({
     const timeout = setTimeout(handleComplete, 1000);
     return () => clearTimeout(timeout);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!isAuthenticated && pathname !== "/login") {
+      redirect("/auth/login");
+    }
+  }, [isAuthenticated, pathname, router]);
 
   const toggleTheme = () => {
     setColorScheme((prev) => (prev === "light" ? "dark" : "light"));

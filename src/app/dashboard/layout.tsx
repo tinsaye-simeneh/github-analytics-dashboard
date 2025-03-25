@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/authstore";
 import Sidebar from "@/components/shared/Sidebar";
 import { useEffect, useState } from "react";
 import { Loader, Center } from "@mantine/core";
+import { redirect } from "next/navigation";
 
 export default function DashboardLayout({
   children,
@@ -17,7 +18,7 @@ export default function DashboardLayout({
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.replace("/auth/login");
+      redirect("/auth/login");
     } else {
       setLoading(false);
     }
