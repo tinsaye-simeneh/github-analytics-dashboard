@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   Table,
@@ -22,7 +20,7 @@ interface EntityTableProps<T> {
   data: T[];
   columns: Column<T>[];
   emptyMessage?: string;
-  layout?: "compact" | "comfortable"; // Already accepts layout
+  layout?: "compact" | "comfortable";
 }
 
 export default function EntityTable<T>({
@@ -84,7 +82,7 @@ export default function EntityTable<T>({
         verticalSpacing={spacing}
         horizontalSpacing={spacing}
         style={{
-          tableLayout: "fixed",
+          tableLayout: "fixed", // Fixed table layout to ensure truncation works
           width: "100%",
         }}
       >
@@ -116,7 +114,7 @@ export default function EntityTable<T>({
                     style={{
                       whiteSpace: "nowrap",
                       overflow: "hidden",
-                      textOverflow: "ellipsis",
+                      textOverflow: "ellipsis", // Truncate text here as well
                     }}
                   >
                     {column.render ? (
