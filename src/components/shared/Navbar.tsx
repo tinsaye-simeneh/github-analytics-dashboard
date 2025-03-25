@@ -49,12 +49,11 @@ const Navbar = ({ toggleTheme, colorScheme }: NavbarProps) => {
 
         <Group visibleFrom="md">
           {isAuthenticated && (
-            <Group
-              align="center"
-              className="border border-gray-400 rounded p-2 flex"
-            >
-              <IconUser size={18} />
-              <Text size="sm">{username}</Text>
+            <Group align="center" className="p-2" gap={4}>
+              <IconUser size={18} color="black" />
+              <Text size="sm" c="blue">
+                {username}
+              </Text>
             </Group>
           )}
 
