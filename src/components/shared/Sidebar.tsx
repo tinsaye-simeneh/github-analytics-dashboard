@@ -1,15 +1,18 @@
 "use client";
+
 import { useState } from "react";
 import { Box, Text, NavLink, Stack, Button } from "@mantine/core";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import { useMediaQuery } from "@mantine/hooks";
+import { useGitHubStore } from "@/store/githubStore";
 
 export default function Sidebar() {
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const [isOpen, setIsOpen] = useState(!isMobile);
   const pathname = usePathname();
+  const { colorScheme } = useGitHubStore();
 
   const tabs = [
     { name: "Home", path: "/dashboard/home" },
@@ -46,7 +49,6 @@ export default function Sidebar() {
         component="aside"
         w={isOpen ? 250 : isMobile ? 0 : 250}
         h="100vh"
-        bg={isMobile ? "gray.1" : "gray.0"}
         style={{
           position: "fixed",
           top: 60,
@@ -55,6 +57,7 @@ export default function Sidebar() {
           overflow: "hidden",
           transition: "width 0.3s ease",
           zIndex: 999,
+          backgroundColor: colorScheme === "dark" ? "#2A2A2A" : "#FFFFFF",
         }}
         p={isOpen ? "md" : 0}
       >
