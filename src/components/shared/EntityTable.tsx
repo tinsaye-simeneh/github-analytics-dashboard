@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   Table,
@@ -8,6 +10,7 @@ import {
   Select,
   Group,
 } from "@mantine/core";
+import { useGitHubStore } from "@/store/githubStore";
 
 interface Column<T> {
   key: keyof T | string;
@@ -20,15 +23,14 @@ interface EntityTableProps<T> {
   data: T[];
   columns: Column<T>[];
   emptyMessage?: string;
-  layout?: "compact" | "comfortable";
 }
 
 export default function EntityTable<T>({
   data,
   columns,
   emptyMessage = "No data available",
-  layout = "comfortable",
 }: EntityTableProps<T>) {
+  const { layout } = useGitHubStore(); // Fetch layout from the store
   const [filters, setFilters] = useState<{ [key: string]: string }>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
@@ -82,7 +84,7 @@ export default function EntityTable<T>({
         verticalSpacing={spacing}
         horizontalSpacing={spacing}
         style={{
-          tableLayout: "fixed", // Fixed table layout to ensure truncation works
+          tableLayout: "fixed",
           width: "100%",
         }}
       >
@@ -114,8 +116,8 @@ export default function EntityTable<T>({
                     style={{
                       whiteSpace: "nowrap",
                       overflow: "hidden",
-                      textOverflow: "ellipsis", // Truncate text here as well
                     }}
+                    className="text-overflow-ellipsis"
                   >
                     {column.render ? (
                       column.render(item)

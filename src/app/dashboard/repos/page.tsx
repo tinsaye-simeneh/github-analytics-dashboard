@@ -90,8 +90,8 @@ export default function Repositories() {
   }
 
   return (
-    <div className="px-10">
-      <Title order={2} mb="lg">
+    <div className="pr-5 pl-10 mt-20">
+      <Title order={2} mb="sm">
         Repositories
       </Title>
       <EntityTable data={repos} columns={columns} />
