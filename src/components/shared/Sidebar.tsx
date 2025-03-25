@@ -38,7 +38,6 @@ export default function Sidebar() {
         component="aside"
         w={isOpen ? 250 : 0}
         h="100vh"
-        bg="gray.0"
         style={{
           position: "fixed",
           top: 60,
