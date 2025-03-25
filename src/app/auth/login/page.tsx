@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Button,
   TextInput,
@@ -19,15 +19,18 @@ const AuthForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { login, isAuthenticated } = useAuthStore();
+
+  const backTo = searchParams.get("backTo") || "/dashboard/home"; // Get backTo URL
 
   const { register, handleSubmit } = useForm<FieldValues>();
 
   const isLoggedIn = useMemo(() => isAuthenticated, [isAuthenticated]);
 
   useEffect(() => {
-    if (isLoggedIn) router.push("/dashboard/home");
-  }, [isLoggedIn, router]);
+    if (isLoggedIn) router.push(backTo);
+  }, [isLoggedIn, router, backTo]);
 
   const handleAuthSubmit: SubmitHandler<FieldValues> = async (data) => {
     setLoading(true);
@@ -37,7 +40,7 @@ const AuthForm: React.FC = () => {
       if (data.email === "admin" && data.password === "admin123") {
         login(data.email);
         toast.success("Login successful!");
-        router.push("/dashboard/home");
+        router.push(backTo); // Redirect back to original page
       } else {
         setError("Invalid username or password");
         toast.error("Invalid credentials");
